@@ -1,0 +1,37 @@
+
+There are 2 supported SDK (Node and Java)-Here we talk node
+
+Node has 3 main modules for sdk -API,FABRIC_CLIENT,FABRIC_CA_CLIENT
+API--To ommunicate with client
+Fabric_client -to communicate with chaincode
+fabrci_ca_client- to communicate with fabric ca server
+
+**So first thing is writing a .js file on node js that can register users and enroll them**
+Code-
+var Fabric_Client = require('fabric-client');
+var Fabric_CA_Client = require('fabric-ca-client');
+
+Connect to CA Server
+    fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', null , '', crypto_suite);
+
+Get current user context as we need to us him to register and enroll
+    fabric_client.getUserContext('admin', true);
+//Register by passing id,affliations and metadata
+    return fabric_ca_client.register({enrollmentID: 'user1', affiliation: 'org1.department1'}, admin_user);
+
+//Enroll the user with obtained passord from register ans store Ecerts,preivate key and pem files in a folder
+    return fabric_ca_client.enroll({enrollmentID: 'user1', enrollmentSecret: secret});
+
+**After above step we go into invoke**
+Here there will be 4 main steps
+
+1.)Get current user certs
+2.)create a request object which has peerid and channel name for invoke and just peerid for query
+3.)create a transaciton id using client.gettransactionid
+4.)create a event hub object to connect to peer eventhub for listening on events(3 types-bloc events,transaiction id,chain code events)
+5.)regiser trasaction id from step3 to eventhun
+6.)perform channel.sendtrnasactionporposal to send the request
+7.)after getting prorposal broadcast the trsanction to orderer using channel.sendtransaction() 
+for query we use channel.querybychaincode()
+
+https://github.com/SharedMocha/fabric-samples/blob/release/fabcar/invoke.js
