@@ -1,0 +1,74 @@
+Chain code written in golang
+here we have 2 main interfaces "chaincode interface" used for init and invoke and "chaincode stub interfcae " used for putstage,getstate and query
+
+
+package main
+
+import {
+"fmt"
+"shim" // to update/get state
+"peer" //prot buffer to receive response back from peer
+
+
+//Empty receiver
+type temp struct{
+
+
+}
+const indexName = `RMANO`
+
+
+func (t *temp) Init(stub shim.chaincodestubInterface) peer.response{
+
+s,err := stub.getstringargs()
+s,err := stub.putstate()
+s,err :=stub.getstate()
+
+
+}
+
+func (temp *temp) Invoke(stub shim.chaincodeinterface) peer.Repsonse{
+
+func,args := stub.GetFunctionAndParameters()
+
+if(func == ""dothis"){
+   udpates(stub,args)
+}
+
+func updates(stub shim.chaincodeinterface,args []string) peer.Response{
+
+val := stub.putstate(key, []byte(value))
+val := stub.GetStateByPartialCompositeKey(key))
+}
+}
+//Starts chaincode when instation is called
+ func main(){
+ shim.start(temp)
+ 
+ }
+
+}
+
+Life cycle of chain code
+package,init,initliaze,upgrade
+
+system life cycles 
+https://hyperledger-fabric.readthedocs.io/en/release/chaincode4noah.html
+System chaincode
+System chaincode has the same programming model except that it runs within the peer process rather than in an isolated container like normal chaincode. Therefore, system chaincode is built into the peer executable and doesn’t follow the same lifecycle described above. In particular, install, instantiate and upgrade do not apply to system chaincodes.
+
+The purpose of system chaincode is to shortcut gRPC communication cost between peer and chaincode, and tradeoff the flexibility in management. For example, a system chaincode can only be upgraded with the peer binary. It must also register with a fixed set of parameters compiled in and doesn’t have endorsement policies or endorsement policy functionality.
+
+System chaincode is used in Hyperledger Fabric to implement a number of system behaviors so that they can be replaced or modified as appropriate by a system integrator.
+
+The current list of system chaincodes:
+
+LSCC Lifecycle system chaincode handles lifecycle requests described above.
+CSCC Configuration system chaincode handles channel configuration on the peer side.
+QSCC Query system chaincode provides ledger query APIs such as getting blocks and transactions.
+ESCC Endorsement system chaincode handles endorsement by signing the transaction proposal response.
+VSCC Validation system chaincode handles the transaction validation, including checking endorsement policy and multiversioning concurrency control.
+Care must be taken when modifying or replacing these system chaincodes, especially LSCC, ESCC and VSCC since they are in the main transaction execution path. It is worth noting that as VSCC validates a block before committing it to the ledger, it is important that all peers in the channel compute the same validation to avoid ledger divergence (non-determinism). So special care is needed if VSCC is modified or replaced.
+
+
+**hwne we called init  -CLI creates a signed cds and sends to lscc of a node which then calls intit**
