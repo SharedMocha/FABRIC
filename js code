@@ -25,6 +25,10 @@ Get current user context as we need to us him to register and enroll
 **After above step we go into invoke**
 Here there will be 4 main steps
 
+preset-connect to peer using below command
+var peer = fabric_client.newPeer('grpc://localhost:7051');
+
+
 1.)Get current user certs
 2.)create a request object which has peerid and channel name for invoke and just peerid for query
 3.)create a transaciton id using client.gettransactionid
